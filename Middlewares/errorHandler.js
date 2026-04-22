@@ -1,6 +1,6 @@
 const handleDuplicateError = (err) => {
-    const errorKey = Object.keys(err.keyValue)[0]
-    const errorValue = Object.values(err.keyValue)[0]
+    const errorKey = err.keyValue ? Object.keys(err.keyValue)[0] : 'field';
+    const errorValue = err.keyValue ? Object.values(err.keyValue)[0] : 'unknown';
     const error = new Error(`${errorKey} of ${errorValue} already exists`)
 
     return {
@@ -10,7 +10,7 @@ const handleDuplicateError = (err) => {
 }
 
 const handleValidationError = (err) =>{
-    const errorMessage = Object.values(err.errors).map(error => error.message)
+    const errorMessage = err.errors ? Object.values(err.errors).map(error => error.message) : ['Validation failed'];
     return {
         statusCode: 400,
         message: errorMessage[0]
