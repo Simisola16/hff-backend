@@ -32,8 +32,9 @@ const startServer = async()=>{
 	try {
 		await connectToDb()
         
-		app.listen(400, ()=>{
-			console.log('listen to port 400');    
+		const PORT = process.env.PORT || 400;
+		app.listen(PORT, ()=>{
+			console.log(`listen to port ${PORT}`);    
 		})
 	} catch (error) {
 		console.log(error);
