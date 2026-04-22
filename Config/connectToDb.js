@@ -2,10 +2,10 @@ const mongoose = require("mongoose")
 const dotenv = require("dotenv")
 dotenv.config()
 
-const mongoDbUri = process.env.Mongo_Uri
+const mongoDbUri = process.env.Mongo_Uri || process.env.MONGODB_URI || process.env.mongo_uri;
 const connectToDb = async ()=>{
     if (!mongoDbUri) {
-        console.error("Error: Mongo_Uri is not defined in .env file");
+        console.error("Error: Database connection string (Mongo_Uri) is not defined in Vercel environment variables.");
         return;
     }
     try {

@@ -6,7 +6,8 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "Halal Food Foundation",
-    allowed_formats: ["png", "jpg", "gif"],
+    allowedFormats: ["png", "jpg", "gif", "webp", "jpeg"],
+    allowed_formats: ["png", "jpg", "gif", "webp", "jpeg"],
   },
 });
 

@@ -1,3 +1,11 @@
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+});
+
 const express = require('express');
 const app = express();
 const cors = require("cors");
@@ -28,20 +36,16 @@ app.use(express.urlencoded({extended:true}))
 app.use(morgan("dev"))
 
 
-const startServer = async()=>{
-	try {
-		await connectToDb()
-        
-		const PORT = process.env.PORT || 400;
-		app.listen(PORT, ()=>{
-			console.log(`listen to port ${PORT}`);    
-		})
-	} catch (error) {
-		console.log(error);
-	}
-}
+// Database connection
+connectToDb();
 
-startServer()
+// Only listen to port in development
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 400;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 
 //Routes
 app.get("/", (req, res)=>{res.send("Welcome to Halal Food Foundation Api version 1.0")})
@@ -56,9 +60,11 @@ app.use("/api/trustee", trusteeRouter);
 
 app.use(express.json())
 
-app.all("/{*any}", (req, res) => {
-    res.json(`${req.method} ${req.originalUrl} is not an endpoint on this server.`)
-})
+app.use((req, res) => {
+    res.status(404).json({
+        message: `${req.method} ${req.originalUrl} is not an endpoint on this server.`
+    });
+});
 // app.use((req, res, next) => {
 //   res.set('Cache-Control', 'no-store');
 //   next();
